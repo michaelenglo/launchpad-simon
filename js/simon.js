@@ -71,6 +71,8 @@ KEYS.forEach(function (key) {
 	notes[key] = new NoteBox(key);
 });
 
+// --------------------- SIMON GAME IMPLEMENTATION ---------------------
+
 var gameOver = false;
 var level = 4;
 
@@ -84,6 +86,8 @@ while(!gameOver) {
 	console.log(notesPlayed);
 	gameOver = true;
 }
+
+// --------------------- SIMON GAME IMPLEMENTATION END ---------------------
 
 // KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
 // 	setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
