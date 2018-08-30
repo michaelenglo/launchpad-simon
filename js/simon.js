@@ -71,6 +71,22 @@ KEYS.forEach(function (key) {
 	notes[key] = new NoteBox(key);
 });
 
-KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
-	setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
-});
+var gameOver = false;
+var level = 4;
+
+while(!gameOver) {
+	var notesPlayed = [];
+
+	for(var i = 0; i < level; i++) {
+		notesPlayed[i] = KEYS[Math.floor(Math.random() * KEYS.length)];
+	}
+
+	console.log(notesPlayed);
+	gameOver = true;
+}
+
+// KEYS.concat(KEYS.slice().reverse()).forEach(function(key, i) {
+// 	setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
+// });
+
+// I have always wanted to be involved in local software development community, whether to be a mentor to people who are new to software development and/or to learn from a mentor myself. The good thing about Launch Pad is that there is a good mix of software newbies and veterans which enables me to both of my goals.
