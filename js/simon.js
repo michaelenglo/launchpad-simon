@@ -60,6 +60,30 @@ function NoteBox(key, onClick) {
 	boxEl.addEventListener('mousedown', this.clickHandler);
 }
 
+// --------------------- NOTE RECORDER CLASS ---------------------
+function NotesRecorder(length) {
+	this.notesPressed =  [];
+	this.length = length;
+	
+	this.push = note => {
+		if (this.notesPressed.length === length) return;
+
+		this.notesPressed.push(note);
+	};
+
+	// Generate a new copy of notesPressed
+	this.getNotesPressed = () => this.notesPressed.map(note => note);
+	
+	this.isComplete = () => this.notesPressed.length === length;
+
+	this.clear = () => {
+		this.notesPressed = [];
+	};
+}
+
+// --------------------- NOTE RECORDER CLASS END ---------------------
+
+
 // Example usage of NoteBox.
 //
 // This will create a map from key strings (i.e. 'c') to NoteBox objects so that
@@ -74,17 +98,54 @@ KEYS.forEach(function (key) {
 // --------------------- SIMON GAME IMPLEMENTATION ---------------------
 
 var gameOver = false;
-var level = 4;
+var level = 0;
+var notesRecorder;
 
 while(!gameOver) {
-	var notesPlayed = [];
+	// Go to next level
+	level++;
 
+	notesRecorder = new NotesRecorder(level);
+
+	// disable note box when the notes are being played
+	Object.values(notes).forEach(noteBox => {
+		noteBox.disable();
+	});
+
+	// select randomized notes with length === current level
+	var notesPlayed = [];
 	for(var i = 0; i < level; i++) {
 		notesPlayed[i] = KEYS[Math.floor(Math.random() * KEYS.length)];
 	}
 
 	console.log(notesPlayed);
 	gameOver = true;
+
+	notesPlayed.forEach(function(key, i) {
+		setTimeout(notes[key].play.bind(null, key), i * NOTE_DURATION);
+	});
+
+	setTimeout(() => {
+		Object.values(notes).forEach(noteBox => {
+			noteBox.enable();
+			noteBox.onClick = key => {
+				notesRecorder.push(key);
+				return new Promise((resolve, reject) => notesRecorder.isComplete() ? resolve : reject);
+			}
+		})
+		.then(() => {
+			var notesPressed = notesRecorder.getNotesPressed();
+
+			console.log(notesPressed);
+
+			notesPlayed.forEach((note,i) => {
+				if(notesPlayed[i] !== notesPressed[i]) {
+					gameOver = true;
+				}
+			});
+		})
+		.catch(() => console.log('not done yet'));
+	}, notesPlayed * NOTE_DURATION);
 }
 
 // --------------------- SIMON GAME IMPLEMENTATION END ---------------------
