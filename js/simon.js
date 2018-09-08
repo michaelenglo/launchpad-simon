@@ -98,7 +98,7 @@ KEYS.forEach(function (key) {
 // --------------------- SIMON GAME IMPLEMENTATION ---------------------
 
 var gameOver = false;
-var level = 0;
+var level = 5;
 var notesRecorder;
 
 while(!gameOver) {
